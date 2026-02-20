@@ -19,6 +19,7 @@ export const App: React.FC = () => {
    * @default [] - Inicialmente vazio, sem produtos carregados
    */
   const [goods, setGoods] = useState<Good[]>([]);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   /**
    * Função para carregar TODOS os produtos disponíveis
    *
@@ -34,7 +35,10 @@ export const App: React.FC = () => {
    * @returns {void} - Não retorna valor, apenas atualiza o estado
    */
   const handleLoadAll = () => {
-    getAll().then(setGoods);
+    setErrorMessage(null);
+    getAll()
+      .then(setGoods)
+      .catch(error => setErrorMessage(error.message));
   };
 
   /**
@@ -57,7 +61,10 @@ export const App: React.FC = () => {
    * @returns {void} - Não retorna valor, apenas atualiza o estado
    */
   const handleLoadFirst5 = () => {
-    get5First().then(setGoods);
+    setErrorMessage(null);
+    get5First()
+      .then(setGoods)
+      .catch(error => setErrorMessage(error.message));
   };
 
   /**
@@ -79,7 +86,10 @@ export const App: React.FC = () => {
    * @returns {void} - Não retorna valor, apenas atualiza o estado
    */
   const handleLoadRed = () => {
-    getRedGoods().then(setGoods);
+    setErrorMessage(null);
+    getRedGoods()
+      .then(setGoods)
+      .catch(error => setErrorMessage(error.message));
   };
 
   /**
@@ -118,6 +128,13 @@ export const App: React.FC = () => {
       <button type="button" data-cy="red-button" onClick={handleLoadRed}>
         Load red goods
       </button>
+
+      {errorMessage && (
+        <div className="error" data-cy="error-message">
+          {errorMessage}
+        </div>
+      )}
+
       {/* Componente que renderiza a lista de produtos */}
       <GoodsList goods={goods} />
     </div>
